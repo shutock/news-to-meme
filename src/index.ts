@@ -1,8 +1,14 @@
-import { generateImage, getMemeIdea, improveLogoPrompt } from "./llm";
+export * from "./get-hottest-article-url";
 
-export const generateMeme = async (prompt: string) => {
-  const { description, logoPrompt, name, symbol } = await getMemeIdea(prompt);
-  const improvedImagePrompt = await improveLogoPrompt(logoPrompt);
+import { generateImage } from "./generate-image";
+import { getMemeIdea } from "./get-meme-idea";
+import { improveLogoPrompt } from "./improve-logo-prompt";
+
+export { generateImage, getMemeIdea, improveLogoPrompt };
+
+export const generateMeme = async (articleUrl: string) => {
+  const meme = await getMemeIdea(articleUrl);
+  const improvedImagePrompt = await improveLogoPrompt(meme.logoPrompt);
   const image = await generateImage(improvedImagePrompt);
 
   /**
@@ -12,5 +18,5 @@ export const generateMeme = async (prompt: string) => {
    * symbol: "BTC",
    * image: "data:image/png;base64,..."
    */
-  return { description, image, name, symbol };
+  return { image, ...meme };
 };
